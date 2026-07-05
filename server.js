@@ -27,6 +27,9 @@ function getAIClient(req) {
   }
   
   const apiKey = req.headers['x-gemini-api-key'] || process.env.GEMINI_API_KEY;
+  console.log("getAIClient - apiKey length:", apiKey ? apiKey.length : 0);
+  console.log("getAIClient - apiKey prefix:", apiKey ? apiKey.substring(0, 8) : "none");
+  
   if (!apiKey || apiKey === 'your_actual_key_from_aistudio' || apiKey.trim() === '') {
     return null;
   }
@@ -59,7 +62,9 @@ app.post('/api/suggest', async (req, res) => {
     res.json({ suggestion: response.text });
   } catch (error) {
     console.error('Error fetching AI suggestion:', error);
-    res.status(500).json({ error: 'Failed to fetch AI suggestion' });
+    const status = error.status || 500;
+    const message = error.message || 'Failed to fetch AI suggestion';
+    res.status(status).json({ error: message });
   }
 });
 
@@ -105,7 +110,9 @@ app.post('/api/chat', async (req, res) => {
     res.json({ reply: response.text });
   } catch (error) {
     console.error('Error fetching AI chat response:', error);
-    res.status(500).json({ error: 'Failed to fetch AI chat response' });
+    const status = error.status || 500;
+    const message = error.message || 'Failed to fetch AI chat response';
+    res.status(status).json({ error: message });
   }
 });
 

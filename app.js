@@ -688,9 +688,12 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Chat error:', error);
       removeLoader(loaderId);
-      const friendlyMessage = (error.message.includes('GEMINI_API_KEY') || error.message.includes('API key'))
-        ? `I encountered an issue: ${error.message} Please set your Gemini API key by clicking the gear icon (⚙️) above.`
-        : 'Sorry, I encountered an error. Please check your API key and try again.';
+      let friendlyMessage = 'Sorry, I encountered an error. Please check your API key and try again.';
+      if (error.message.includes('Quota') || error.message.includes('limit') || error.message.includes('429') || error.message.includes('ResourceExhausted')) {
+        friendlyMessage = 'You have exceeded the Gemini API rate limit. Please wait a moment before sending another message.';
+      } else if (error.message.includes('GEMINI_API_KEY') || error.message.includes('API key')) {
+        friendlyMessage = `I encountered an issue: ${error.message} Please set your Gemini API key by clicking the gear icon (⚙️) above.`;
+      }
       appendMessage(friendlyMessage, 'ai');
     } finally {
       chatbotSendBtn.disabled = false;
