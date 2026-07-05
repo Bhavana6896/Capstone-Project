@@ -1284,6 +1284,198 @@ h1 {
   border-color: #fca5a5;
 }
 
+/* Monthly Well-being Calendar Widget Styles */
+.calendar-card-container {
+  background: #ffffff;
+  border: 2px solid var(--panel-border);
+  box-shadow: 0 8px 25px var(--panel-shadow);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 0.75rem;
+}
+
+.calendar-header h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.calendar-nav-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.calendar-nav-btn {
+  background: #faf8f5;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.calendar-nav-btn:hover {
+  background: var(--accent-gradient);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+.calendar-nav-btn:active {
+  transform: translateY(0);
+}
+
+/* Weekday header grid */
+.calendar-weekdays-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+}
+
+/* Calendar Days Grid */
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+}
+
+/* Calendar Cell Base */
+.calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.calendar-cell.empty {
+  background: transparent;
+  pointer-events: none;
+}
+
+.calendar-cell.past-unlogged {
+  background: #faf8f5;
+  border: 1px dashed var(--panel-border);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.calendar-cell.past-unlogged:hover {
+  background: #fdfaf2;
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  color: var(--accent-color);
+}
+
+.calendar-cell.future {
+  background: transparent;
+  color: var(--text-muted);
+  opacity: 0.45;
+  cursor: not-allowed;
+  font-weight: 500;
+}
+
+.calendar-cell.today {
+  border: 2px solid var(--accent-color);
+  box-shadow: 0 0 10px rgba(224, 94, 69, 0.25);
+  animation: todayGlow 2s infinite alternate;
+}
+
+@keyframes todayGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(224, 94, 69, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(224, 94, 69, 0.4);
+  }
+}
+
+/* Logged states with score-colored circle badges */
+.calendar-cell.logged {
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid var(--panel-border);
+}
+
+.calendar-cell.logged:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-score-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: white;
+  margin-top: 2px;
+}
+
+/* Low Score (1-2) */
+.calendar-cell.score-low .calendar-score-dot {
+  background: #f87171; /* red */
+  box-shadow: 0 2px 6px rgba(248, 113, 113, 0.3);
+}
+.calendar-cell.score-low:hover {
+  border-color: #f87171;
+}
+
+/* Medium Score (3) */
+.calendar-cell.score-med .calendar-score-dot {
+  background: #fbbf24; /* yellow */
+  box-shadow: 0 2px 6px rgba(251, 191, 36, 0.3);
+}
+.calendar-cell.score-med:hover {
+  border-color: #fbbf24;
+}
+
+/* High Score (4-5) */
+.calendar-cell.score-high .calendar-score-dot {
+  background: #34d399; /* emerald green */
+  box-shadow: 0 2px 6px rgba(52, 211, 153, 0.3);
+}
+.calendar-cell.score-high:hover {
+  border-color: #34d399;
+}
+
+
+
 
 @keyframes chatbotSlideDown {
   from {

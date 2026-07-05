@@ -53,7 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load and display entries
   let logs = JSON.parse(localStorage.getItem('mood_tracker_logs')) || [];
+  
+  // Calendar View State
+  const todayDate = new Date();
+  let currentCalendarYear = todayDate.getFullYear();
+  let currentCalendarMonth = todayDate.getMonth(); // 0-indexed
+  
   renderHistory();
+  renderCalendar();
   
   // Show the most recent log on page load so the AI suggestion is visible
   if (logs.length > 0) {
@@ -346,6 +353,144 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
+  // Helper: Render interactive monthly calendar
+  function renderCalendar() {
+    const container = document.getElementById('calendar-card-container');
+    if (!container) return;
+
+    // Get current calendar focus details
+    const calendarDate = new Date(currentCalendarYear, currentCalendarMonth, 1);
+    const monthName = calendarDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+    // Find the weekday of the 1st of the month (0 = Sun, 6 = Sat)
+    const firstDayIndex = calendarDate.getDay();
+
+    // Get total number of days in the month
+    const totalDays = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
+
+    // Generate weekdays headers (Sun-Sat)
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const weekdaysGridHTML = weekdays.map(day => `<div class="calendar-weekday">${day}</div>`).join('');
+
+    // Generate empty cells for days before the 1st of the month
+    let daysHTML = '';
+    for (let i = 0; i < firstDayIndex; i++) {
+      daysHTML += `<div class="calendar-cell empty"></div>`;
+    }
+
+    const todayStr = getLocalDateString();
+
+    // Generate day cells
+    for (let day = 1; day <= totalDays; day++) {
+      const dateStr = `${currentCalendarYear}-${String(currentCalendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const entry = logs.find(log => log.date === dateStr);
+      
+      let cellClass = 'calendar-cell';
+      let scoreBadge = '';
+      
+      const cellDate = new Date(currentCalendarYear, currentCalendarMonth, day);
+      const isToday = dateStr === todayStr;
+      const isFuture = cellDate > todayDate && !isToday;
+
+      if (isToday) {
+        cellClass += ' today';
+      }
+
+      if (entry) {
+        // Logged day
+        cellClass += ' logged';
+        const scores = calculateEntryScores(entry);
+        
+        if (scores.overallScore >= 4) {
+          cellClass += ' score-high';
+        } else if (scores.overallScore === 3) {
+          cellClass += ' score-med';
+        } else {
+          cellClass += ' score-low';
+        }
+        
+        scoreBadge = `<div class="calendar-score-dot" title="Score: ${scores.overallScore}/5">${scores.overallScore}</div>`;
+      } else if (isFuture) {
+        // Future day
+        cellClass += ' future';
+      } else {
+        // Past unlogged day
+        cellClass += ' past-unlogged';
+      }
+
+      daysHTML += `
+        <div class="${cellClass}" data-date="${dateStr}" title="${entry ? `Logged: ${calculateEntryScores(entry).overallScore}/5` : isFuture ? '' : 'Not logged - click to log'}">
+          <span class="day-number">${day}</span>
+          ${scoreBadge}
+        </div>
+      `;
+    }
+
+    container.innerHTML = `
+      <div class="calendar-header">
+        <h3>Calendar — ${monthName}</h3>
+        <div class="calendar-nav-buttons">
+          <button id="calendar-prev-btn" class="calendar-nav-btn" title="Previous Month">◀</button>
+          <button id="calendar-next-btn" class="calendar-nav-btn" title="Next Month">▶</button>
+        </div>
+      </div>
+      <div class="calendar-weekdays-grid">
+        ${weekdaysGridHTML}
+      </div>
+      <div class="calendar-days-grid">
+        ${daysHTML}
+      </div>
+    `;
+
+    // Wire up navigation buttons
+    const prevBtn = document.getElementById('calendar-prev-btn');
+    const nextBtn = document.getElementById('calendar-next-btn');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        currentCalendarMonth--;
+        if (currentCalendarMonth < 0) {
+          currentCalendarMonth = 11;
+          currentCalendarYear--;
+        }
+        renderCalendar();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        currentCalendarMonth++;
+        if (currentCalendarMonth > 11) {
+          currentCalendarMonth = 0;
+          currentCalendarYear++;
+        }
+        renderCalendar();
+      });
+    }
+
+    // Wire up cell click events
+    const cells = container.querySelectorAll('.calendar-cell:not(.empty):not(.future)');
+    cells.forEach(cell => {
+      cell.addEventListener('click', () => {
+        const clickedDate = cell.getAttribute('data-date');
+        const clickedEntry = logs.find(log => log.date === clickedDate);
+        
+        if (clickedEntry) {
+          // Logged: show summary card and scroll to it
+          renderLatestScore(clickedEntry);
+          latestScoreContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          animateScoreBadge();
+        } else {
+          // Unlogged: set date inputs and scroll to form to backfill
+          dateInput.value = clickedDate;
+          resetCheckboxes();
+          trackerForm.scrollIntoView({ behavior: 'smooth' });
+          showNotification(`Set date to ${formatDisplayDate(clickedDate)} to log habits.`);
+        }
+      });
+    });
+  }
+
   // Form submit handler
   trackerForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -398,6 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Render new score calculation and update history view
       renderLatestScore(dailyEntry);
       renderHistory();
+      renderCalendar();
       resetCheckboxes();
 
       // Smooth scroll to the result summary card
@@ -468,6 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     renderHistory();
+    renderCalendar();
     showNotification(`Log deleted for ${formatDisplayDate(date)}.`, 'error');
   };
 
@@ -479,6 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
       saveLogs();
       renderLatestScore(null);
       renderHistory();
+      renderCalendar();
       showNotification('All history logs cleared.', 'error');
     }
   });
