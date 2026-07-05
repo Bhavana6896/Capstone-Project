@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bhavana</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Bhavana</h1>
+      <p class="subtitle">Log your daily progress and nurture your well-being with Bhavana.</p>
+    </header>
+
+    <div id="notification-bar" class="notification"></div>
+    
+    <!-- Latest Score Display Card -->
+    <div id="latest-score-container" class="score-card-container" style="display: none;"></div>
+
+    <!-- Monthly Progress Stats Widget -->
+    <div id="monthly-progress-container" class="monthly-progress-card"></div>
+
+    <form id="tracker-form">
+      <!-- Date Selector -->
+      <div class="date-selector-container">
+        <div class="date-selector-wrapper">
+          <label for="log-date">Select Date:</label>
+          <input type="date" id="log-date" class="date-input" required>
+        </div>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="grid-categories">
+        
+        <!-- Emotional Well-being -->
+        <div class="category-card">
+          <h2 class="category-title"><span class="icon">💜</span> Emotional Well-being</h2>
+          <p class="category-blurb">Connecting with loved ones reduces stress, increases feelings of belonging, and improves emotional regulation. Strengthening these bonds is essential for mental health.</p>
+          <div class="checkbox-list">
+            <label class="checkbox-row">
+              <input type="checkbox" name="emotional_well_being" value="called_friend_family">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Called a friend/family</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="emotional_well_being" value="spent_time_loved_one">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Spent time with loved one</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Physical Fitness -->
+        <div class="category-card">
+          <h2 class="category-title"><span class="icon">⚡</span> Physical Fitness</h2>
+          <p class="category-blurb">Regular movement boosts energy levels, sharpens focus, and releases endorphins that elevate your mood. It builds the foundation for long-term health.</p>
+          <div class="checkbox-list">
+            <label class="checkbox-row">
+              <input type="checkbox" name="physical_fitness" value="exercised">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Exercised</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="physical_fitness" value="went_for_walk">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Went for a walk</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Mental Resilience -->
+        <div class="category-card">
+          <h2 class="category-title"><span class="icon">🧘</span> Mental Resilience</h2>
+          <p class="category-blurb">Accomplishing simple household tasks provides a sense of order and agency, while journaling helps process emotions and declutter your thoughts.</p>
+          <div class="checkbox-list">
+            <label class="checkbox-row">
+              <input type="checkbox" name="mental_resilience" value="washed_dishes">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Washed dishes</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="mental_resilience" value="cleaned_house">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Cleaned house</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="mental_resilience" value="journaled">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Journaled</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Financial Health -->
+        <div class="category-card">
+          <h2 class="category-title"><span class="icon">🌱</span> Financial Health</h2>
+          <p class="category-blurb">Productive work habit loops build confidence, and mindful spending habits reduce anxiety about the future, creating stability and peace of mind.</p>
+          <div class="checkbox-list">
+            <label class="checkbox-row">
+              <input type="checkbox" name="financial_health" value="work_task_done">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Work task done</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="financial_health" value="no_impulse_spend">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">No impulse spend</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-btn" id="submit-btn">Log Today's Entries</button>
+      </div>
+    </form>
+
+    <!-- History Log Section -->
+    <section class="history-section">
+      <div class="history-header">
+        <h2 class="history-title">History Logs</h2>
+        <button id="clear-all-btn" class="clear-btn">Clear All</button>
+      </div>
+      <div id="history-container" class="entries-container">
+        <!-- Rendered dynamically by JavaScript -->
+        <div class="no-entries">No logs saved yet. Submit the form above to add one!</div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <footer class="about-section">
+      <p><strong>About Bhavana:</strong> Bhavana is a lightweight, non-clinical tool designed to help you notice personal patterns and nudge small daily habits. It is not intended to be a therapy, diagnosis, or clinical diagnostic tool. For medical guidance or mental health support, please consult with qualified professionals.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
