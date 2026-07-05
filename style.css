@@ -1259,6 +1259,32 @@ h1 {
   text-decoration: underline;
 }
 
+.settings-danger-zone {
+  margin-top: 0.5rem;
+  border-top: 1px dashed var(--panel-border);
+  padding-top: 0.75rem;
+  display: flex;
+}
+
+.chatbot-clear-history-btn {
+  width: 100%;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.chatbot-clear-history-btn:hover {
+  background: #fecaca;
+  border-color: #fca5a5;
+}
+
+
 @keyframes chatbotSlideDown {
   from {
     opacity: 0;

@@ -223,9 +223,29 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     latestScoreContainer.style.display = 'block';
 
+    // If suggestion is already cached for this entry, load it directly without API call
+    if (entry.ai_suggestion) {
+      const suggestionBox = document.getElementById('ai-suggestion-box');
+      if (suggestionBox) {
+        suggestionBox.innerHTML = `
+          <span class="ai-suggestion-icon">💡</span>
+          <div class="ai-suggestion-content">
+            <span class="ai-suggestion-title">AI Suggestion</span>
+            <p class="ai-suggestion-text">${entry.ai_suggestion}</p>
+          </div>
+        `;
+        suggestionBox.classList.add('loaded');
+      }
+      return;
+    }
+
     // Call the AI agent asynchronously
     getAISuggestion(scores.overallScore, scores.lowestCategoryTitle)
       .then(suggestion => {
+        // Cache the suggestion in the log entry and save logs
+        entry.ai_suggestion = suggestion;
+        saveLogs();
+
         const suggestionBox = document.getElementById('ai-suggestion-box');
         if (suggestionBox) {
           suggestionBox.innerHTML = `
@@ -363,6 +383,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Check if an entry for this date already exists
       const existingIndex = logs.findIndex(entry => entry.date === selectedDate);
       if (existingIndex !== -1) {
+        // Clear cached suggestion on edit so a fresh one can be generated
+        dailyEntry.ai_suggestion = null;
         logs[existingIndex] = dailyEntry;
         showNotification(`Log updated for ${formatDisplayDate(selectedDate)}.`);
       } else {
@@ -598,6 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatbotInput = document.getElementById('chatbot-input');
   const chatbotMessages = document.getElementById('chatbot-messages');
   const chatbotSendBtn = document.getElementById('chatbot-send-btn');
+  const chatbotClearHistoryBtn = document.getElementById('chatbot-clear-history-btn');
 
   let chatHistory = JSON.parse(localStorage.getItem('bhavana_chat_history')) || [];
 
@@ -644,6 +667,25 @@ document.addEventListener('DOMContentLoaded', () => {
     chatbotSettings.classList.add('hidden');
     showNotification('Gemini API key saved successfully.', 'success');
   });
+
+  // Clear Chat History
+  if (chatbotClearHistoryBtn) {
+    chatbotClearHistoryBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear your chat history? This cannot be undone.')) {
+        localStorage.removeItem('bhavana_chat_history');
+        chatHistory = [];
+        chatbotMessages.innerHTML = '';
+        
+        // Restore default greeting
+        chatHistory.push({ role: 'ai', text: "Hi, I'm Bhavana. Your well-being assistant." });
+        saveChatHistory();
+        appendMessage("Hi, I'm Bhavana. Your well-being assistant.", 'ai');
+        
+        chatbotSettings.classList.add('hidden');
+        showNotification('Chat history cleared successfully.', 'success');
+      }
+    });
+  }
 
   // Handle Form Submission
   chatbotForm.addEventListener('submit', async (e) => {
