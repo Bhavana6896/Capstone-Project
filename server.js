@@ -17,10 +17,20 @@ app.use(express.json());
 // Serve static files from the current directory
 app.use(express.static(__dirname));
 
-// Initialize Gemini SDK if key is available
-let ai;
-if (process.env.GEMINI_API_KEY) {
-  ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Dynamic Gemini SDK initialization helper
+function getAIClient(req) {
+  // Reload env variables from .env dynamically on each request to pick up changes without restarting
+  try {
+    dotenv.config({ override: true });
+  } catch (e) {
+    console.error('Failed to reload .env:', e);
+  }
+  
+  const apiKey = req.headers['x-gemini-api-key'] || process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === 'your_actual_key_from_aistudio' || apiKey.trim() === '') {
+    return null;
+  }
+  return new GoogleGenAI({ apiKey });
 }
 
 // POST endpoint for AI suggestions
@@ -28,9 +38,10 @@ app.post('/api/suggest', async (req, res) => {
   try {
     const { score, lowestCategory } = req.body;
     
-    if (!process.env.GEMINI_API_KEY || !ai) {
+    const ai = getAIClient(req);
+    if (!ai) {
       return res.status(500).json({ 
-        error: 'GEMINI_API_KEY is missing. Please configure it in .env' 
+        error: 'GEMINI_API_KEY is missing. Please configure it in .env or in the chatbot settings.' 
       });
     }
 
@@ -57,9 +68,10 @@ app.post('/api/chat', async (req, res) => {
   try {
     const { message, history } = req.body;
     
-    if (!process.env.GEMINI_API_KEY || !ai) {
+    const ai = getAIClient(req);
+    if (!ai) {
       return res.status(500).json({ 
-        error: 'GEMINI_API_KEY is missing. Please configure it in .env' 
+        error: 'GEMINI_API_KEY is missing. Please configure it in .env or in the chatbot settings.' 
       });
     }
 
@@ -70,8 +82,12 @@ app.post('/api/chat', async (req, res) => {
     const systemInstruction = "You are a gentle, encouraging well-being assistant for the Bhavana app. Keep responses brief, empathetic, and helpful. Do not diagnose or give medical advice.";
 
     // Format history for the Gemini API
-    // The history should be an array of objects with `role` ("user" or "model") and `parts` (array of text parts).
-    const formattedHistory = (history || []).map(msg => ({
+    // Ensure we only include previous turns (exclude the current message if it's at the end)
+    let historyToFormat = history || [];
+    if (historyToFormat.length > 0 && historyToFormat[historyToFormat.length - 1].text === message) {
+      historyToFormat = historyToFormat.slice(0, -1);
+    }
+    const formattedHistory = historyToFormat.map(msg => ({
       role: msg.role === 'ai' ? 'model' : 'user',
       parts: [{ text: msg.text }]
     }));

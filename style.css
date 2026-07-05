@@ -1149,3 +1149,123 @@ h1 {
   cursor: not-allowed;
   transform: none;
 }
+
+/* Chatbot Settings Panel Styles */
+.chatbot-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chatbot-settings-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+}
+
+.chatbot-settings-btn:hover {
+  opacity: 1;
+  transform: rotate(45deg);
+}
+
+.chatbot-settings {
+  background: #ffffff;
+  border-bottom: 1px solid var(--panel-border);
+  padding: 1rem 1.25rem;
+  animation: chatbotSlideDown 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 10;
+}
+
+.chatbot-settings.hidden {
+  display: none;
+}
+
+.chatbot-settings-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.chatbot-settings-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.api-key-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chatbot-api-key-input {
+  flex: 1;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: white;
+  color: var(--text-primary);
+}
+
+.chatbot-api-key-input:focus {
+  border-color: var(--accent-color);
+}
+
+.chatbot-save-key-btn {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chatbot-save-key-btn:hover {
+  background: var(--accent-hover);
+}
+
+.settings-help-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.settings-help-text a {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+@keyframes chatbotSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

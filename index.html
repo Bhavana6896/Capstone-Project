@@ -138,13 +138,32 @@
       <div id="chatbot-panel" class="chatbot-panel hidden">
         <div class="chatbot-header">
           <div class="chatbot-title">
-            <span class="icon">✨</span> Bhavana Assistant
+            <span class="icon">✨</span> Bhavana
           </div>
-          <button id="chatbot-close-btn" class="chatbot-close-btn">&times;</button>
+          <div class="chatbot-header-actions">
+            <button id="chatbot-settings-btn" class="chatbot-settings-btn" title="API Key Settings">⚙️</button>
+            <button id="chatbot-close-btn" class="chatbot-close-btn" title="Close chat">&times;</button>
+          </div>
         </div>
+        
+        <!-- API Key Settings Section -->
+        <div id="chatbot-settings" class="chatbot-settings hidden">
+          <div class="chatbot-settings-header">
+            <h4>API Key Settings</h4>
+          </div>
+          <div class="chatbot-settings-body">
+            <label for="chatbot-api-key" class="settings-label">Gemini API Key</label>
+            <div class="api-key-input-wrapper">
+              <input type="password" id="chatbot-api-key" class="chatbot-api-key-input" placeholder="Paste your API key here..." autocomplete="off">
+              <button type="button" id="chatbot-save-key-btn" class="chatbot-save-key-btn">Save</button>
+            </div>
+            <p class="settings-help-text">Stored locally in your browser. Get one from <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>.</p>
+          </div>
+        </div>
+
         <div id="chatbot-messages" class="chatbot-messages">
           <div class="chat-message ai-message">
-            <div class="message-content">Hello! I'm your Bhavana well-being assistant. How are you feeling today?</div>
+            <div class="message-content">Hi, I'm Bhavana. Your well-being assistant.</div>
           </div>
         </div>
         <form id="chatbot-form" class="chatbot-form">

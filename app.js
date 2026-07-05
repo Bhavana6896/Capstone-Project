@@ -120,10 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch real AI Suggestion from our Express backend
   async function getAISuggestion(score, lowestCategory) {
     try {
+      const savedKey = localStorage.getItem('bhavana_gemini_api_key') || '';
       const response = await fetch('/api/suggest', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Gemini-API-Key': savedKey
         },
         body: JSON.stringify({ score, lowestCategory })
       });
@@ -588,12 +590,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatbotFab = document.getElementById('chatbot-fab');
   const chatbotPanel = document.getElementById('chatbot-panel');
   const chatbotCloseBtn = document.getElementById('chatbot-close-btn');
+  const chatbotSettingsBtn = document.getElementById('chatbot-settings-btn');
+  const chatbotSettings = document.getElementById('chatbot-settings');
+  const chatbotApiKeyInput = document.getElementById('chatbot-api-key');
+  const chatbotSaveKeyBtn = document.getElementById('chatbot-save-key-btn');
   const chatbotForm = document.getElementById('chatbot-form');
   const chatbotInput = document.getElementById('chatbot-input');
   const chatbotMessages = document.getElementById('chatbot-messages');
   const chatbotSendBtn = document.getElementById('chatbot-send-btn');
 
   let chatHistory = JSON.parse(localStorage.getItem('bhavana_chat_history')) || [];
+
+  // Load saved API key on startup
+  const savedApiKey = localStorage.getItem('bhavana_gemini_api_key') || '';
+  if (savedApiKey) {
+    chatbotApiKeyInput.value = savedApiKey;
+  }
 
   // Initialize UI with saved history
   if (chatHistory.length > 0) {
@@ -602,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chatHistory.forEach(msg => appendMessage(msg.text, msg.role, false));
   } else {
     // Save the default initial greeting to history
-    chatHistory.push({ role: 'ai', text: "Hello! I'm your Bhavana well-being assistant. How are you feeling today?" });
+    chatHistory.push({ role: 'ai', text: "Hi, I'm Bhavana. Your well-being assistant." });
     saveChatHistory();
   }
 
@@ -617,6 +629,20 @@ document.addEventListener('DOMContentLoaded', () => {
   chatbotCloseBtn.addEventListener('click', () => {
     chatbotPanel.classList.add('hidden');
     chatbotFab.style.transform = '';
+  });
+
+  // Toggle Settings Panel
+  chatbotSettingsBtn.addEventListener('click', () => {
+    chatbotSettings.classList.toggle('hidden');
+    scrollToBottom();
+  });
+
+  // Save API Key
+  chatbotSaveKeyBtn.addEventListener('click', () => {
+    const key = chatbotApiKeyInput.value.trim();
+    localStorage.setItem('bhavana_gemini_api_key', key);
+    chatbotSettings.classList.add('hidden');
+    showNotification('Gemini API key saved successfully.', 'success');
   });
 
   // Handle Form Submission
@@ -637,9 +663,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const loaderId = appendLoader();
 
     try {
+      const savedKey = localStorage.getItem('bhavana_gemini_api_key') || '';
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Gemini-API-Key': savedKey
+        },
         body: JSON.stringify({ message, history: chatHistory })
       });
 
@@ -658,7 +688,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Chat error:', error);
       removeLoader(loaderId);
-      appendMessage('Sorry, I encountered an error. Please check your API key and try again.', 'ai');
+      const friendlyMessage = (error.message.includes('GEMINI_API_KEY') || error.message.includes('API key'))
+        ? `I encountered an issue: ${error.message} Please set your Gemini API key by clicking the gear icon (⚙️) above.`
+        : 'Sorry, I encountered an error. Please check your API key and try again.';
+      appendMessage(friendlyMessage, 'ai');
     } finally {
       chatbotSendBtn.disabled = false;
       chatbotInput.focus();
