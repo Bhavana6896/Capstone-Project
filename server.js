@@ -84,7 +84,7 @@ app.post('/api/chat', async (req, res) => {
       return res.status(400).json({ error: 'message is required' });
     }
 
-    const systemInstruction = "You are a gentle, encouraging well-being assistant for the Bhavana app. Keep responses brief, empathetic, and helpful. Do not diagnose or give medical advice.";
+    const systemInstruction = "You are a gentle, encouraging well-being assistant for the Happy B! :) app. Keep responses brief, empathetic, and helpful. Do not diagnose or give medical advice.";
 
     // Format history for the Gemini API
     // Ensure we only include previous turns (exclude the current message if it's at the end)
@@ -118,5 +118,5 @@ app.post('/api/chat', async (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Bhavana server running at http://localhost:${port}`);
+  console.log(`Happy B! :) server running at http://localhost:${port}`);
 });

@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div id="ai-suggestion-box" class="ai-suggestion-card">
         <div class="ai-suggestion-loader">
           <span class="pulse-dot"></span>
-          <span>Bhavana AI is generating a suggestion...</span>
+          <span>Happy B! :) AI is generating a suggestion...</span>
         </div>
       </div>
     `;

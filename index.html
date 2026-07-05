@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bhavana</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="container">
     <header>
@@ -14,7 +16,7 @@
     </header>
 
     <div id="notification-bar" class="notification"></div>
-    
+
     <!-- Latest Score Display Card -->
     <div id="latest-score-container" class="score-card-container" style="display: none;"></div>
 
@@ -32,11 +34,12 @@
 
       <!-- Categories Grid -->
       <div class="grid-categories">
-        
+
         <!-- Emotional Well-being -->
         <div class="category-card">
           <h2 class="category-title"><span class="icon">💜</span> Emotional Well-being</h2>
-          <p class="category-blurb">Connecting with loved ones reduces stress, increases feelings of belonging, and improves emotional regulation. Strengthening these bonds is essential for mental health.</p>
+          <p class="category-blurb">Connecting with loved ones reduces stress, increases feelings of belonging, and
+            improves emotional regulation. Strengthening these bonds is essential for mental health.</p>
           <div class="checkbox-list">
             <label class="checkbox-row">
               <input type="checkbox" name="emotional_well_being" value="called_friend_family">
@@ -54,7 +57,8 @@
         <!-- Physical Fitness -->
         <div class="category-card">
           <h2 class="category-title"><span class="icon">⚡</span> Physical Fitness</h2>
-          <p class="category-blurb">Regular movement boosts energy levels, sharpens focus, and releases endorphins that elevate your mood. It builds the foundation for long-term health.</p>
+          <p class="category-blurb">Regular movement boosts energy levels, sharpens focus, and releases endorphins that
+            elevate your mood. It builds the foundation for long-term health.</p>
           <div class="checkbox-list">
             <label class="checkbox-row">
               <input type="checkbox" name="physical_fitness" value="exercised">
@@ -72,7 +76,8 @@
         <!-- Mental Resilience -->
         <div class="category-card">
           <h2 class="category-title"><span class="icon">🧘</span> Mental Resilience</h2>
-          <p class="category-blurb">Accomplishing simple household tasks provides a sense of order and agency, while journaling helps process emotions and declutter your thoughts.</p>
+          <p class="category-blurb">Accomplishing simple household tasks provides a sense of order and agency, while
+            journaling helps process emotions and declutter your thoughts.</p>
           <div class="checkbox-list">
             <label class="checkbox-row">
               <input type="checkbox" name="mental_resilience" value="washed_dishes">
@@ -95,7 +100,8 @@
         <!-- Financial Health -->
         <div class="category-card">
           <h2 class="category-title"><span class="icon">🌱</span> Financial Health</h2>
-          <p class="category-blurb">Productive work habit loops build confidence, and mindful spending habits reduce anxiety about the future, creating stability and peace of mind.</p>
+          <p class="category-blurb">Productive work habit loops build confidence, and mindful spending habits reduce
+            anxiety about the future, creating stability and peace of mind.</p>
           <div class="checkbox-list">
             <label class="checkbox-row">
               <input type="checkbox" name="financial_health" value="work_task_done">
@@ -131,7 +137,9 @@
 
     <!-- About Section -->
     <footer class="about-section">
-      <p><strong>About Bhavana:</strong> Bhavana is a lightweight, non-clinical tool designed to help you notice personal patterns and nudge small daily habits. It is not intended to be a therapy, diagnosis, or clinical diagnostic tool. For medical guidance or mental health support, please consult with qualified professionals.</p>
+      <p><strong>About Happy B! :):</strong> Happy B! :) is a lightweight, non-clinical tool designed to help you notice
+        personal patterns and nudge small daily habits. It is not intended to be a therapy, diagnosis, or clinical
+        diagnostic tool. For medical guidance or mental health support, please consult with qualified professionals.</p>
     </footer>
     <!-- Chatbot Widget -->
     <div id="chatbot-container" class="chatbot-container">
@@ -145,7 +153,7 @@
             <button id="chatbot-close-btn" class="chatbot-close-btn" title="Close chat">&times;</button>
           </div>
         </div>
-        
+
         <!-- API Key Settings Section -->
         <div id="chatbot-settings" class="chatbot-settings hidden">
           <div class="chatbot-settings-header">
@@ -154,10 +162,12 @@
           <div class="chatbot-settings-body">
             <label for="chatbot-api-key" class="settings-label">Gemini API Key</label>
             <div class="api-key-input-wrapper">
-              <input type="password" id="chatbot-api-key" class="chatbot-api-key-input" placeholder="Paste your API key here..." autocomplete="off">
+              <input type="password" id="chatbot-api-key" class="chatbot-api-key-input"
+                placeholder="Paste your API key here..." autocomplete="off">
               <button type="button" id="chatbot-save-key-btn" class="chatbot-save-key-btn">Save</button>
             </div>
-            <p class="settings-help-text">Stored locally in your browser. Get one from <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>.</p>
+            <p class="settings-help-text">Stored locally in your browser. Get one from <a
+                href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>.</p>
           </div>
         </div>
 
@@ -167,18 +177,27 @@
           </div>
         </div>
         <form id="chatbot-form" class="chatbot-form">
-          <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message..." autocomplete="off">
+          <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message..."
+            autocomplete="off">
           <button type="submit" id="chatbot-send-btn" class="chatbot-send-btn">
-            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
           </button>
         </form>
       </div>
       <button id="chatbot-fab" class="chatbot-fab">
-        <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
       </button>
     </div>
   </div>
 
   <script src="app.js"></script>
 </body>
+
 </html>

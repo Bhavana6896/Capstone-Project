@@ -1,6 +1,6 @@
-# Bhavana — Daily Habit & Well-being Tracker
+# Happy B! :) — Daily Habit & Well-being Tracker
 
-Bhavana is a beautiful, tactile, and non-clinical well-being tracking application. It helps you notice personal patterns, log daily wellness habits, and receive gentle nudges and conversations from **Bhavana**, your AI well-being assistant powered by the Google Gemini API.
+Happy B! :) is a beautiful, tactile, and non-clinical well-being tracking application. It helps you notice personal patterns, log daily wellness habits, and receive gentle nudges and conversations from **Bhavana**, your AI well-being assistant powered by the Google Gemini API.
 
 ---
 
@@ -12,7 +12,7 @@ Bhavana is a beautiful, tactile, and non-clinical well-being tracking applicatio
     *   🧘 *Mental Resilience* (Completing tasks, journaling)
     *   🌱 *Financial Health* (Work productivity, mindful spending)
 *   **Daily score & Focus Area:** Automatically calculates an overall daily score (1-5) and highlights your focus area (the category with the lowest score).
-*   **Bhavana AI Suggestions:** Dynamically generates a single wellbeing suggestion from Gemini based on your daily summary.
+*   **Happy B! :) AI Suggestions:** Dynamically generates a single wellbeing suggestion from Gemini based on your daily summary.
 *   **Bhavana Assistant (Chatbot):** A gentle, empathetic chatbot designed for brief, supportive conversations about your day.
 *   **Monthly Progress Stats:** Interactive metrics tracking your average score, total days logged, and hit rate (days where score $\geq 3$) for the current month.
 *   **Zero-Database Local Storage:** All log entries and chat histories are saved locally in your browser's `localStorage` for privacy.
@@ -77,5 +77,5 @@ The application will be running at: **[http://localhost:3000](http://localhost:3
 ---
 
 ## ⚙️ Error and Quota Management
-*   **Rate Limits (HTTP 429):** The Gemini API Free Tier is limited to 15 Requests Per Minute (RPM). If you hit this limit, Bhavana will show a gentle alert: *"You have exceeded the Gemini API rate limit. Please wait a moment before sending another message."*
-*   **Missing Credentials:** If no key is configured in either `.env` or settings, Bhavana will prompt you to set your API key by clicking the settings gear icon.
+*   **Rate Limits (HTTP 429):** The Gemini API Free Tier is limited to 15 Requests Per Minute (RPM). If you hit this limit, Happy B! :) will show a gentle alert: *"You have exceeded the Gemini API rate limit. Please wait a moment before sending another message."*
+*   **Missing Credentials:** If no key is configured in either `.env` or settings, Happy B! :) will prompt you to set your API key by clicking the settings gear icon.

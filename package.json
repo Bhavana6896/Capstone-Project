@@ -1,7 +1,7 @@
 {
   "name": "bhavana",
   "version": "1.0.0",
-  "description": "Bhavana Daily Mood Tracker",
+  "description": "Happy B! :) Daily Mood Tracker",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
