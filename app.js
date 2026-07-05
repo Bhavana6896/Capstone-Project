@@ -581,4 +581,134 @@ document.addEventListener('DOMContentLoaded', () => {
       historyContainer.appendChild(entryCard);
     });
   }
+
+  // ==========================================
+  // Chatbot Widget Logic
+  // ==========================================
+  const chatbotFab = document.getElementById('chatbot-fab');
+  const chatbotPanel = document.getElementById('chatbot-panel');
+  const chatbotCloseBtn = document.getElementById('chatbot-close-btn');
+  const chatbotForm = document.getElementById('chatbot-form');
+  const chatbotInput = document.getElementById('chatbot-input');
+  const chatbotMessages = document.getElementById('chatbot-messages');
+  const chatbotSendBtn = document.getElementById('chatbot-send-btn');
+
+  let chatHistory = JSON.parse(localStorage.getItem('bhavana_chat_history')) || [];
+
+  // Initialize UI with saved history
+  if (chatHistory.length > 0) {
+    // Clear default greeting if we have history
+    chatbotMessages.innerHTML = '';
+    chatHistory.forEach(msg => appendMessage(msg.text, msg.role, false));
+  } else {
+    // Save the default initial greeting to history
+    chatHistory.push({ role: 'ai', text: "Hello! I'm your Bhavana well-being assistant. How are you feeling today?" });
+    saveChatHistory();
+  }
+
+  // Toggle Chat Panel
+  chatbotFab.addEventListener('click', () => {
+    chatbotPanel.classList.remove('hidden');
+    chatbotFab.style.transform = 'scale(0)';
+    setTimeout(() => chatbotInput.focus(), 300);
+    scrollToBottom();
+  });
+
+  chatbotCloseBtn.addEventListener('click', () => {
+    chatbotPanel.classList.add('hidden');
+    chatbotFab.style.transform = '';
+  });
+
+  // Handle Form Submission
+  chatbotForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const message = chatbotInput.value.trim();
+    if (!message) return;
+
+    // Display user message
+    appendMessage(message, 'user');
+    chatHistory.push({ role: 'user', text: message });
+    saveChatHistory();
+    
+    chatbotInput.value = '';
+    chatbotSendBtn.disabled = true;
+
+    // Show loading indicator
+    const loaderId = appendLoader();
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, history: chatHistory })
+      });
+
+      const data = await response.json();
+      removeLoader(loaderId);
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to get response');
+      }
+
+      // Display AI response
+      appendMessage(data.reply, 'ai');
+      chatHistory.push({ role: 'ai', text: data.reply });
+      saveChatHistory();
+
+    } catch (error) {
+      console.error('Chat error:', error);
+      removeLoader(loaderId);
+      appendMessage('Sorry, I encountered an error. Please check your API key and try again.', 'ai');
+    } finally {
+      chatbotSendBtn.disabled = false;
+      chatbotInput.focus();
+    }
+  });
+
+  // Helper Functions
+  function appendMessage(text, role, animate = true) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `chat-message ${role}-message`;
+    if (!animate) msgDiv.style.animation = 'none';
+
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.textContent = text;
+    
+    msgDiv.appendChild(contentDiv);
+    chatbotMessages.appendChild(msgDiv);
+    scrollToBottom();
+  }
+
+  function appendLoader() {
+    const id = 'loader-' + Date.now();
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'chat-message ai-message';
+    msgDiv.id = id;
+
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.innerHTML = '<span class="pulse-dot"></span><span class="pulse-dot" style="animation-delay:0.2s; margin:0 4px;"></span><span class="pulse-dot" style="animation-delay:0.4s"></span>';
+    contentDiv.style.display = 'flex';
+    contentDiv.style.padding = '12px 16px';
+    
+    msgDiv.appendChild(contentDiv);
+    chatbotMessages.appendChild(msgDiv);
+    scrollToBottom();
+    return id;
+  }
+
+  function removeLoader(id) {
+    const loader = document.getElementById(id);
+    if (loader) loader.remove();
+  }
+
+  function scrollToBottom() {
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  }
+
+  function saveChatHistory() {
+    localStorage.setItem('bhavana_chat_history', JSON.stringify(chatHistory));
+  }
+
 });

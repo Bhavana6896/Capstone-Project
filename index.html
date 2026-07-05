@@ -133,6 +133,31 @@
     <footer class="about-section">
       <p><strong>About Bhavana:</strong> Bhavana is a lightweight, non-clinical tool designed to help you notice personal patterns and nudge small daily habits. It is not intended to be a therapy, diagnosis, or clinical diagnostic tool. For medical guidance or mental health support, please consult with qualified professionals.</p>
     </footer>
+    <!-- Chatbot Widget -->
+    <div id="chatbot-container" class="chatbot-container">
+      <div id="chatbot-panel" class="chatbot-panel hidden">
+        <div class="chatbot-header">
+          <div class="chatbot-title">
+            <span class="icon">✨</span> Bhavana Assistant
+          </div>
+          <button id="chatbot-close-btn" class="chatbot-close-btn">&times;</button>
+        </div>
+        <div id="chatbot-messages" class="chatbot-messages">
+          <div class="chat-message ai-message">
+            <div class="message-content">Hello! I'm your Bhavana well-being assistant. How are you feeling today?</div>
+          </div>
+        </div>
+        <form id="chatbot-form" class="chatbot-form">
+          <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message..." autocomplete="off">
+          <button type="submit" id="chatbot-send-btn" class="chatbot-send-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
+        </form>
+      </div>
+      <button id="chatbot-fab" class="chatbot-fab">
+        <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      </button>
+    </div>
   </div>
 
   <script src="app.js"></script>
