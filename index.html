@@ -41,10 +41,15 @@
       <div class="grid-categories">
 
         <!-- Emotional Well-being -->
-        <div class="category-card">
-          <h2 class="category-title"><span class="icon">💜</span> Emotional Well-being</h2>
-          <p class="category-blurb">Connecting with loved ones reduces stress, increases feelings of belonging, and
-            improves emotional regulation. Strengthening these bonds is essential for mental health.</p>
+        <div class="category-card" data-category="emotional_well_being">
+          <h2 class="category-title">
+            <span class="icon">💜</span> Emotional Well-being
+            <button class="info-toggle-btn" type="button" title="Learn more">ℹ️</button>
+          </h2>
+          <div class="category-info-panel hidden">
+            <p class="category-blurb">Connecting with loved ones reduces stress, increases feelings of belonging, and
+              improves emotional regulation. Strengthening these bonds is essential for mental health.</p>
+          </div>
           <div class="checkbox-list">
             <label class="checkbox-row">
               <input type="checkbox" name="emotional_well_being" value="called_friend_family">
@@ -52,18 +57,51 @@
               <span class="checkbox-label">Called a friend/family</span>
             </label>
             <label class="checkbox-row">
-              <input type="checkbox" name="emotional_well_being" value="spent_time_loved_one">
+              <input type="checkbox" name="emotional_well_being" value="spent_time_relaxing">
               <span class="checkmark"></span>
-              <span class="checkbox-label">Spent time with loved one</span>
+              <span class="checkbox-label">Spent time relaxing - Netflix & Chill or PS5</span>
             </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="emotional_well_being" value="positive_self_talk">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Practiced positive self-talk or self-compassion</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="emotional_well_being" value="expressed_gratitude">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Expressed gratitude to someone</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="emotional_well_being" value="deep_conversation">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Had a deep or meaningful conversation</span>
+            </label>
+          </div>
+          <div class="custom-task-container">
+            <div class="custom-checkboxes-list"></div>
+            <div class="custom-task-actions">
+              <button type="button" class="add-custom-task-btn">+ Add custom task</button>
+              <div class="custom-task-input-wrapper hidden">
+                <input type="text" class="custom-task-input" placeholder="Type custom task..." autocomplete="off">
+                <div class="custom-task-btn-group">
+                  <button type="button" class="save-custom-btn">Add</button>
+                  <button type="button" class="cancel-custom-btn">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Physical Fitness -->
-        <div class="category-card">
-          <h2 class="category-title"><span class="icon">⚡</span> Physical Fitness</h2>
-          <p class="category-blurb">Regular movement boosts energy levels, sharpens focus, and releases endorphins that
-            elevate your mood. It builds the foundation for long-term health.</p>
+        <div class="category-card" data-category="physical_fitness">
+          <h2 class="category-title">
+            <span class="icon">⚡</span> Physical Fitness
+            <button class="info-toggle-btn" type="button" title="Learn more">ℹ️</button>
+          </h2>
+          <div class="category-info-panel hidden">
+            <p class="category-blurb">Regular movement boosts energy levels, sharpens focus, and releases endorphins that
+              elevate your mood. It builds the foundation for long-term health.</p>
+          </div>
           <div class="checkbox-list">
             <label class="checkbox-row">
               <input type="checkbox" name="physical_fitness" value="exercised">
@@ -71,18 +109,51 @@
               <span class="checkbox-label">Exercised</span>
             </label>
             <label class="checkbox-row">
-              <input type="checkbox" name="physical_fitness" value="went_for_walk">
+              <input type="checkbox" name="physical_fitness" value="walk_or_run">
               <span class="checkmark"></span>
-              <span class="checkbox-label">Went for a walk</span>
+              <span class="checkbox-label">Went for a walk or run</span>
             </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="physical_fitness" value="stretch_or_yoga">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Stretched or did yoga</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="physical_fitness" value="drink_water">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Drank 8+ glasses of water</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="physical_fitness" value="sleep_hours">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Got 7–8 hours of restful sleep</span>
+            </label>
+          </div>
+          <div class="custom-task-container">
+            <div class="custom-checkboxes-list"></div>
+            <div class="custom-task-actions">
+              <button type="button" class="add-custom-task-btn">+ Add custom task</button>
+              <div class="custom-task-input-wrapper hidden">
+                <input type="text" class="custom-task-input" placeholder="Type custom task..." autocomplete="off">
+                <div class="custom-task-btn-group">
+                  <button type="button" class="save-custom-btn">Add</button>
+                  <button type="button" class="cancel-custom-btn">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Mental Resilience -->
-        <div class="category-card">
-          <h2 class="category-title"><span class="icon">🧘</span> Mental Resilience</h2>
-          <p class="category-blurb">Accomplishing simple household tasks provides a sense of order and agency, while
-            journaling helps process emotions and declutter your thoughts.</p>
+        <div class="category-card" data-category="mental_resilience">
+          <h2 class="category-title">
+            <span class="icon">🧘</span> Mental Resilience
+            <button class="info-toggle-btn" type="button" title="Learn more">ℹ️</button>
+          </h2>
+          <div class="category-info-panel hidden">
+            <p class="category-blurb">Accomplishing simple household tasks provides a sense of order and agency, while
+              journaling helps process emotions and declutter your thoughts.</p>
+          </div>
           <div class="checkbox-list">
             <label class="checkbox-row">
               <input type="checkbox" name="mental_resilience" value="washed_dishes">
@@ -99,14 +170,42 @@
               <span class="checkmark"></span>
               <span class="checkbox-label">Journaled</span>
             </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="mental_resilience" value="mindfulness_meditation">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Practiced mindfulness or meditation</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="mental_resilience" value="learning_something_new">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Spent time learning something new - book, podcast, documentary, coding, etc.</span>
+            </label>
+          </div>
+          <div class="custom-task-container">
+            <div class="custom-checkboxes-list"></div>
+            <div class="custom-task-actions">
+              <button type="button" class="add-custom-task-btn">+ Add custom task</button>
+              <div class="custom-task-input-wrapper hidden">
+                <input type="text" class="custom-task-input" placeholder="Type custom task..." autocomplete="off">
+                <div class="custom-task-btn-group">
+                  <button type="button" class="save-custom-btn">Add</button>
+                  <button type="button" class="cancel-custom-btn">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Financial Health -->
-        <div class="category-card">
-          <h2 class="category-title"><span class="icon">🌱</span> Financial Health</h2>
-          <p class="category-blurb">Productive work habit loops build confidence, and mindful spending habits reduce
-            anxiety about the future, creating stability and peace of mind.</p>
+        <div class="category-card" data-category="financial_health">
+          <h2 class="category-title">
+            <span class="icon">🌱</span> Financial Health
+            <button class="info-toggle-btn" type="button" title="Learn more">ℹ️</button>
+          </h2>
+          <div class="category-info-panel hidden">
+            <p class="category-blurb">Productive work habit loops build confidence, and mindful spending habits reduce
+              anxiety about the future, creating stability and peace of mind.</p>
+          </div>
           <div class="checkbox-list">
             <label class="checkbox-row">
               <input type="checkbox" name="financial_health" value="work_task_done">
@@ -118,6 +217,34 @@
               <span class="checkmark"></span>
               <span class="checkbox-label">No impulse spend</span>
             </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="financial_health" value="review_budget">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Reviewed daily budget or tracked expenses</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="financial_health" value="save_invest">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Saved or invested money</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="financial_health" value="cooked_food">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Cooked food instead of spontaneously eating-out</span>
+            </label>
+          </div>
+          <div class="custom-task-container">
+            <div class="custom-checkboxes-list"></div>
+            <div class="custom-task-actions">
+              <button type="button" class="add-custom-task-btn">+ Add custom task</button>
+              <div class="custom-task-input-wrapper hidden">
+                <input type="text" class="custom-task-input" placeholder="Type custom task..." autocomplete="off">
+                <div class="custom-task-btn-group">
+                  <button type="button" class="save-custom-btn">Add</button>
+                  <button type="button" class="cancel-custom-btn">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

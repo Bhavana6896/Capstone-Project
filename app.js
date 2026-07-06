@@ -13,14 +13,20 @@ document.addEventListener('DOMContentLoaded', () => {
       title: '💜 Emotional Well-being',
       items: {
         called_friend_family: 'Called a friend/family',
-        spent_time_loved_one: 'Spent time with loved one'
+        spent_time_relaxing: 'Spent time relaxing - Netflix & Chill or PS5',
+        positive_self_talk: 'Practiced positive self-talk or self-compassion',
+        expressed_gratitude: 'Expressed gratitude to someone',
+        deep_conversation: 'Had a deep or meaningful conversation'
       }
     },
     physical_fitness: {
       title: '⚡ Physical Fitness',
       items: {
         exercised: 'Exercised',
-        went_for_walk: 'Went for a walk'
+        walk_or_run: 'Went for a walk or run',
+        stretch_or_yoga: 'Stretched or did yoga',
+        drink_water: 'Drank 8+ glasses of water',
+        sleep_hours: 'Got 7–8 hours of restful sleep'
       }
     },
     mental_resilience: {
@@ -28,14 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
       items: {
         washed_dishes: 'Washed dishes',
         cleaned_house: 'Cleaned house',
-        journaled: 'Journaled'
+        journaled: 'Journaled',
+        mindfulness_meditation: 'Practiced mindfulness or meditation',
+        learning_something_new: 'Spent time learning something new - book, podcast, documentary, coding, etc.'
       }
     },
     financial_health: {
       title: '🌱 Financial Health',
       items: {
         work_task_done: 'Work task done',
-        no_impulse_spend: 'No impulse spend'
+        no_impulse_spend: 'No impulse spend',
+        review_budget: 'Reviewed daily budget or tracked expenses',
+        save_invest: 'Saved or invested money',
+        cooked_food: 'Cooked food instead of spontaneously eating-out'
       }
     }
   };
@@ -91,9 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const categoryData = entry[categoryKey] || {};
       
       let categoryCheckedCount = 0;
-      const categoryTotalCount = Object.keys(categoryConfig.items).length;
+      
+      // Calculate dynamic keys combining default items and any logged custom items
+      const allItemKeys = new Set([
+        ...Object.keys(categoryConfig.items),
+        ...Object.keys(categoryData).filter(k => k !== 'ai_suggestion')
+      ]);
+      const categoryTotalCount = allItemKeys.size;
 
-      Object.keys(categoryConfig.items).forEach(itemKey => {
+      allItemKeys.forEach(itemKey => {
         if (categoryData[itemKey] === true) {
           categoryCheckedCount++;
         }
@@ -501,17 +518,20 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Capture the state of all checkboxes structured by category
+    // Capture the state of all checkboxes structured by category (including custom ones)
     const dailyEntry = {
       date: selectedDate
     };
 
     Object.keys(CATEGORIES).forEach(categoryKey => {
       dailyEntry[categoryKey] = {};
-      Object.keys(CATEGORIES[categoryKey].items).forEach(itemKey => {
-        const checkbox = document.querySelector(`input[name="${categoryKey}"][value="${itemKey}"]`);
-        dailyEntry[categoryKey][itemKey] = checkbox ? checkbox.checked : false;
-      });
+      const card = document.querySelector(`.category-card[data-category="${categoryKey}"]`);
+      if (card) {
+        const checkboxes = card.querySelectorAll(`input[name="${categoryKey}"]`);
+        checkboxes.forEach(cb => {
+          dailyEntry[categoryKey][cb.value] = cb.checked;
+        });
+      }
     });
 
     // Visual transition effect on submit button
@@ -569,6 +589,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function resetCheckboxes() {
     const checkboxes = trackerForm.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach(cb => cb.checked = false);
+    // Also reset completion glows
+    document.querySelectorAll('.category-card').forEach(card => {
+      card.classList.remove('completed');
+    });
   }
 
   // Save logs to local storage
@@ -584,14 +608,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load values
     dateInput.value = entry.date;
     Object.keys(CATEGORIES).forEach(categoryKey => {
-      const categoryConfig = CATEGORIES[categoryKey];
       const categoryData = entry[categoryKey] || {};
-      Object.keys(categoryConfig.items).forEach(itemKey => {
-        const checkbox = document.querySelector(`input[name="${categoryKey}"][value="${itemKey}"]`);
-        if (checkbox) {
-          checkbox.checked = !!categoryData[itemKey];
+      
+      // Self-healing: if the entry contains custom tasks not in the current view, restore them
+      Object.keys(categoryData).forEach(itemKey => {
+        if (itemKey.startsWith('custom_')) {
+          const checkbox = document.querySelector(`input[name="${categoryKey}"][value="${itemKey}"]`);
+          if (!checkbox) {
+            // Restore task label from key format
+            const rawLabel = itemKey.replace(/^custom_/, '').replace(/_/g, ' ');
+            const capitalizedLabel = rawLabel.charAt(0).toUpperCase() + rawLabel.slice(1);
+            
+            if (!customTasks[categoryKey]) {
+              customTasks[categoryKey] = [];
+            }
+            if (!customTasks[categoryKey].includes(capitalizedLabel)) {
+              customTasks[categoryKey].push(capitalizedLabel);
+              saveCustomTasks();
+              renderCustomCheckboxes(categoryKey);
+            }
+          }
         }
       });
+
+      // Set checked states and update completion glows
+      const card = document.querySelector(`.category-card[data-category="${categoryKey}"]`);
+      if (card) {
+        const checkboxes = card.querySelectorAll(`input[name="${categoryKey}"]`);
+        checkboxes.forEach(cb => {
+          cb.checked = !!categoryData[cb.value];
+        });
+        checkCategoryCompletion(card);
+      }
     });
 
     // Scroll up smoothly to the form
@@ -718,11 +766,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const tagsContainer = document.createElement('div');
         tagsContainer.className = 'entry-item-tags';
 
-        // Add visual indicator tag for each item
-        Object.keys(categoryConfig.items).forEach(itemKey => {
-          const itemLabel = categoryConfig.items[itemKey];
-          const isChecked = !!categoryData[itemKey];
+        // Add visual indicator tag for each item (including custom ones)
+        const allKeys = new Set([
+          ...Object.keys(categoryConfig.items),
+          ...Object.keys(categoryData).filter(k => k !== 'ai_suggestion')
+        ]);
 
+        allKeys.forEach(itemKey => {
+          let itemLabel = categoryConfig.items[itemKey];
+          if (!itemLabel && itemKey.startsWith('custom_')) {
+            const rawLabel = itemKey.replace(/^custom_/, '').replace(/_/g, ' ');
+            itemLabel = rawLabel.charAt(0).toUpperCase() + rawLabel.slice(1);
+          }
+          if (!itemLabel) return;
+
+          const isChecked = !!categoryData[itemKey];
           const tag = document.createElement('span');
           tag.className = `tag ${isChecked ? 'checked' : ''}`;
           tag.textContent = `${isChecked ? '✓' : '✗'} ${itemLabel}`;
@@ -889,6 +947,187 @@ document.addEventListener('DOMContentLoaded', () => {
       chatbotSendBtn.disabled = false;
       chatbotInput.focus();
     }
+  });
+
+  // ==========================================
+  // Collapsible Blurb & Custom Tasks Logic
+  // ==========================================
+  
+  let customTasks = JSON.parse(localStorage.getItem('bhavana_custom_tasks')) || {
+    emotional_well_being: [],
+    physical_fitness: [],
+    mental_resilience: [],
+    financial_health: []
+  };
+
+  function saveCustomTasks() {
+    localStorage.setItem('bhavana_custom_tasks', JSON.stringify(customTasks));
+  }
+
+  function renderCustomCheckboxes(categoryKey) {
+    const card = document.querySelector(`.category-card[data-category="${categoryKey}"]`);
+    if (!card) return;
+    const container = card.querySelector('.custom-checkboxes-list');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const tasks = customTasks[categoryKey] || [];
+    tasks.forEach(taskText => {
+      const taskKey = `custom_${taskText.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+      const checkboxRow = document.createElement('label');
+      checkboxRow.className = 'checkbox-row custom-checkbox-row';
+      checkboxRow.innerHTML = `
+        <input type="checkbox" name="${categoryKey}" value="${taskKey}">
+        <span class="checkmark"></span>
+        <span class="checkbox-label">${taskText}</span>
+        <button type="button" class="delete-custom-task-btn" title="Remove custom task">🗑️</button>
+      `;
+      
+      // Delete custom task
+      const deleteBtn = checkboxRow.querySelector('.delete-custom-task-btn');
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if (confirm(`Remove custom task "${taskText}"? This will not delete past logs.`)) {
+          customTasks[categoryKey] = customTasks[categoryKey].filter(t => t !== taskText);
+          saveCustomTasks();
+          renderCustomCheckboxes(categoryKey);
+          checkCategoryCompletion(card);
+        }
+      });
+
+      // Recalculate completion when custom checkboxes are toggled
+      const cb = checkboxRow.querySelector('input[type="checkbox"]');
+      cb.addEventListener('change', () => {
+        checkCategoryCompletion(card);
+      });
+      
+      container.appendChild(checkboxRow);
+    });
+  }
+
+  function renderAllCustomCheckboxes() {
+    Object.keys(CATEGORIES).forEach(categoryKey => {
+      renderCustomCheckboxes(categoryKey);
+    });
+  }
+
+  function checkCategoryCompletion(card) {
+    const checkboxes = card.querySelectorAll('input[type="checkbox"]');
+    if (checkboxes.length === 0) {
+      card.classList.remove('completed');
+      return;
+    }
+    
+    let allChecked = true;
+    checkboxes.forEach(cb => {
+      if (!cb.checked) {
+        allChecked = false;
+      }
+    });
+    
+    if (allChecked) {
+      card.classList.add('completed');
+    } else {
+      card.classList.remove('completed');
+    }
+  }
+
+  // Render initial checkboxes
+  renderAllCustomCheckboxes();
+
+  // Watch default checkboxes for completion glows
+  document.querySelectorAll('.category-card').forEach(card => {
+    checkCategoryCompletion(card);
+    
+    card.addEventListener('change', (e) => {
+      if (e.target && e.target.type === 'checkbox') {
+        checkCategoryCompletion(card);
+      }
+    });
+  });
+
+  // Collapsible Info Blurb toggles
+  document.querySelectorAll('.info-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.category-card');
+      if (!card) return;
+      const panel = card.querySelector('.category-info-panel');
+      if (!panel) return;
+      
+      const isHidden = panel.classList.contains('hidden');
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        btn.classList.add('active');
+      } else {
+        panel.classList.add('hidden');
+        btn.classList.remove('active');
+      }
+    });
+  });
+
+  // Add custom tasks listeners
+  document.querySelectorAll('.category-card').forEach(card => {
+    const categoryKey = card.getAttribute('data-category');
+    const addBtn = card.querySelector('.add-custom-task-btn');
+    const inputWrapper = card.querySelector('.custom-task-input-wrapper');
+    const inputField = card.querySelector('.custom-task-input');
+    const saveBtn = card.querySelector('.save-custom-btn');
+    const cancelBtn = card.querySelector('.cancel-custom-btn');
+    
+    if (!addBtn || !inputWrapper || !inputField || !saveBtn || !cancelBtn) return;
+    
+    addBtn.addEventListener('click', () => {
+      addBtn.classList.add('hidden');
+      inputWrapper.classList.remove('hidden');
+      inputField.focus();
+    });
+    
+    const hideInput = () => {
+      inputField.value = '';
+      inputWrapper.classList.add('hidden');
+      addBtn.classList.remove('hidden');
+    };
+    
+    cancelBtn.addEventListener('click', hideInput);
+    
+    saveBtn.addEventListener('click', () => {
+      const taskText = inputField.value.trim();
+      if (!taskText) {
+        showNotification('Please enter a task name.', 'error');
+        return;
+      }
+      
+      if (taskText.length > 50) {
+        showNotification('Task name is too long (max 50 chars).', 'error');
+        return;
+      }
+      
+      const currentTasks = customTasks[categoryKey] || [];
+      if (currentTasks.includes(taskText)) {
+        showNotification('This task already exists.', 'error');
+        return;
+      }
+      
+      if (!customTasks[categoryKey]) {
+        customTasks[categoryKey] = [];
+      }
+      customTasks[categoryKey].push(taskText);
+      saveCustomTasks();
+      
+      renderCustomCheckboxes(categoryKey);
+      checkCategoryCompletion(card);
+      hideInput();
+      showNotification('Custom task added.', 'success');
+    });
+    
+    inputField.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveBtn.click();
+      }
+    });
   });
 
   // Helper Functions
