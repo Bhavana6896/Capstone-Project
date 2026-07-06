@@ -90,9 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   };
 
-  // Helper: calculate scoring values for a given entry
+  // Helper: calculate scoring values for a given entry using the Balanced Pillar algorithm
   function calculateEntryScores(entry) {
     let totalChecked = 0;
+    let categoriesEngaged = 0;
     const categoryBreakdown = {};
     let minChecked = Infinity;
     let lowestCategoryTitle = "";
@@ -123,6 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       totalChecked += categoryCheckedCount;
+      if (categoryCheckedCount > 0) {
+        categoriesEngaged++;
+      }
 
       // Track lowest category. Lowest score wins.
       // Tie breaker: picks first matching category
@@ -132,7 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    const overallScore = Math.min(5, 1 + totalChecked);
+    // Score: 1.0 (base) + 0.75 per category engaged + 0.05 per individual task
+    let score = 1.0;
+    score += categoriesEngaged * 0.75;
+    score += totalChecked * 0.05;
+    const overallScore = parseFloat(Math.min(5.0, score).toFixed(1));
 
     return {
       overallScore,
@@ -225,9 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="score-title-wrapper">
           <h3>Daily Score Summary</h3>
           <p>Calculated for ${formatDisplayDate(entry.date)}</p>
+          <span class="score-explain-subtitle">Balanced Pillar Algorithm: Base 1.0 + 0.75 per category engaged + 0.05 per task (max 5.0).</span>
         </div>
         <div class="score-display">
-          <span class="score-badge">Overall: ${scores.overallScore} / 5</span>
+          <span class="score-badge">Overall: ${scores.overallScore.toFixed(1)} / 5</span>
         </div>
       </div>
       <div class="score-breakdown-grid">
