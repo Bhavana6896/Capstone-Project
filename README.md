@@ -79,3 +79,13 @@ The application will be running at: **[http://localhost:3000](http://localhost:3
 ## ⚙️ Error and Quota Management
 *   **Rate Limits (HTTP 429):** The Gemini API Free Tier is limited to 15 Requests Per Minute (RPM). If you hit this limit, Happy B! :) will show a gentle alert: *"You have exceeded the Gemini API rate limit. Please wait a moment before sending another message."*
 *   **Missing Credentials:** If no key is configured in either `.env` or settings, Happy B! :) will prompt you to set your API key by clicking the settings gear icon.
+
+---
+
+## 🔒 Security & API Key Privacy
+
+Your Gemini API key is completely secure when using Happy B! :):
+*   **Git Ignored (`.env`):** Your actual API key is stored in the local `.env` file, which is listed in your `.gitignore`. It will never be committed or uploaded to GitHub.
+*   **Local Storage Option:** If you enter your key directly through the settings gear in the UI, it is stored only inside your browser's local sandbox (`localStorage`) on your own computer.
+*   **Secure Gateway:** All API calls are sent over HTTPS directly to the official Google Gemini API endpoints.
+
